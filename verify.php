@@ -1,26 +1,22 @@
 <?php
 include 'connect.php';
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $otp = $_POST['otp'];
 
-    $query = "SELECT * FROM users WHERE email='$email'";
+    $query = "SELECT * FROM users WHERE email='$email' AND otp='$otp'";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) == 1) {
-        $user = mysqli_fetch_assoc($result);
-        if ($user['is_verified'] == 0) {
-            $error = "Please verify your email before logging in.";
-        } elseif (password_verify($password, $user['hash_password'])) {
-            $_SESSION['email'] = $email;
-            header('Location: dashboard.php');
+        $query = "UPDATE users SET is_verified=1 WHERE email='$email'";
+        if (mysqli_query($conn, $query)) {
+            header('Location: login.php');
         } else {
-            $error = "Invalid email or password";
+            $error = "Error: " . $query . "<br>" . mysqli_error($conn);
         }
     } else {
-        $error = "Invalid email or password";
+        $error = "Invalid OTP";
     }
 }
 ?>
@@ -30,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Email Verification</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -39,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="col-md-6">
                 <div class="card mt-5">
                     <div class="card-header text-center">
-                        <h2>Login</h2>
+                        <h2>Email Verification</h2>
                     </div>
                     <div class="card-body">
                         <?php if (isset($error)) { echo "<div class='alert alert-danger'>$error</div>"; } ?>
@@ -49,14 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="email" name="email" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" class="form-control" required>
+                                <label for="otp">OTP</label>
+                                <input type="text" name="otp" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            <button type="submit" class="btn btn-primary btn-block">Verify</button>
                         </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <a href="signup.php">Don't have an account? Sign up</a>
                     </div>
                 </div>
             </div>

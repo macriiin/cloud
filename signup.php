@@ -8,10 +8,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $hash_password = password_hash($password, PASSWORD_DEFAULT);
+    $otp = rand(100000, 999999); // Generate a 6-digit OTP
 
-    $query = "INSERT INTO users (first_name, middle_name, last_name, email, password, hash_password) VALUES ('$first_name', '$middle_name', '$last_name', '$email', '$password', '$hash_password')";
+    $query = "INSERT INTO users (first_name, middle_name, last_name, email, password, hash_password, otp, is_verified) VALUES ('$first_name', '$middle_name', '$last_name', '$email', '$password', '$hash_password', '$otp', 0)";
     if (mysqli_query($conn, $query)) {
-        header('Location: login.php');
+        // Send OTP to user's email
+        $subject = "Email Verification";
+        $message = "Your OTP for email verification is: $otp";
+        $headers = "From: no-reply@yourdomain.com";
+        mail($email, $subject, $message, $headers);
+
+        header('Location: verify.php?email=' . $email);
     } else {
         $error = "Error: " . $query . "<br>" . mysqli_error($conn);
     }
