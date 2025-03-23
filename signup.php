@@ -5,10 +5,8 @@ error_reporting(E_ALL);
 
 include 'connect.php';
 
-// Include PHPMailer manually (no Composer)
-require 'phpmailer/src/Exception.php';
-require 'phpmailer/src/PHPMailer.php';
-require 'phpmailer/src/SMTP.php';
+// Include Composer's autoload file
+require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
