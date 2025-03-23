@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="card-body">
                         <?php if (isset($error)) { echo "<div class='alert alert-danger'>$error</div>"; } ?>
-                        <form method="POST" action="">
+                        <form method="POST" action="/cloud/login.php">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" class="form-control" required>

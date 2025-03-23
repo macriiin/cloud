@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="card-body">
                         <?php if (isset($error)) { echo "<div class='alert alert-danger'>$error</div>"; } ?>
-                        <form method="POST" action="">
+                        <form method="POST" action="/cloud/signup.php">
                             <div class="form-group">
                                 <label for="first_name">First Name</label>
                                 <input type="text" name="first_name" class="form-control" required>
