@@ -5,18 +5,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $otp = $_POST['otp'];
 
-    $query = "SELECT * FROM users WHERE email='$email' AND otp='$otp'";
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) == 1) {
-        $query = "UPDATE users SET is_verified=1 WHERE email='$email'";
-        if (mysqli_query($conn, $query)) {
-            header('Location: login.php');
-        } else {
-            $error = "Error: " . $query . "<br>" . mysqli_error($conn);
-        }
+    if (!$conn) {
+        $error = "Database connection failed: " . mysqli_connect_error();
     } else {
-        $error = "Invalid OTP";
+        $query = "SELECT * FROM users WHERE email='$email' AND otp='$otp'";
+        $result = mysqli_query($conn, $query);
+
+        if (mysqli_num_rows($result) == 1) {
+            $query = "UPDATE users SET is_verified=1 WHERE email='$email'";
+            if (mysqli_query($conn, $query)) {
+                header('Location: login.php');
+            } else {
+                $error = "Error: " . $query . "<br>" . mysqli_error($conn);
+            }
+        } else {
+            $error = "Invalid OTP";
+        }
     }
 }
 ?>

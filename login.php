@@ -6,21 +6,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $query);
+    if (!$conn) {
+        $error = "Database connection failed: " . mysqli_connect_error();
+    } else {
+        $query = "SELECT * FROM users WHERE email='$email'";
+        $result = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($result) == 1) {
-        $user = mysqli_fetch_assoc($result);
-        if ($user['is_verified'] == 0) {
-            $error = "Please verify your email before logging in.";
-        } elseif (password_verify($password, $user['hash_password'])) {
-            $_SESSION['email'] = $email;
-            header('Location: dashboard.php');
+        if (mysqli_num_rows($result) == 1) {
+            $user = mysqli_fetch_assoc($result);
+            if ($user['is_verified'] == 0) {
+                $error = "Please verify your email before logging in.";
+            } elseif (password_verify($password, $user['hash_password'])) {
+                $_SESSION['email'] = $email;
+                header('Location: dashboard.php');
+            } else {
+                $error = "Invalid email or password";
+            }
         } else {
             $error = "Invalid email or password";
         }
-    } else {
-        $error = "Invalid email or password";
     }
 }
 ?>
