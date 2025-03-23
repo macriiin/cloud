@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </form>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="signup.php">Don't have an account? Sign up</a>
+                        <a href="/cloud/signup.php">Don't have an account? Sign up</a>
                     </div>
                 </div>
             </div>
